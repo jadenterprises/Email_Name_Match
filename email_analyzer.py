@@ -3,19 +3,6 @@ import logging
 import os
 import sys
 import zipfile
-import json
-from pathlib import Path
-
-# --- Hard-coded Path Defaults ---
-# These paths are based on the project brief and can be overridden by CLI arguments.
-DEFAULT_INPUT_DIR = Path(r"C:\Adapt\Email Name Match")
-DEFAULT_OUTPUT_DIR = Path(r"C:\Adapt\Email Name Match")
-# The brief specifies two different locations for reference files.
-# The primary location for 'All Names.csv' is a separate reference directory.
-DEFAULT_REF_DIR = Path(r"C:\Adapt\Reference Files")
-# The other reference files are in the input directory.
-DEFAULT_REF_INPUT_DIR = Path(r"C:\Adapt\Email Name Match")
-
 
 # --- Main Script Logic ---
 
@@ -37,13 +24,13 @@ def setup_logging(output_dir: Path):
         ]
     )
 
-def generate_test_files_if_missing(input_dir: Path, ref_dir: Path):
+
     """
     Checks for the existence of required input files. If they are missing,
     it generates minimal, representative test files to ensure the script
     can run end-to-end immediately.
     """
-    # Define file paths based on the directory structure from the brief
+
     input_zip_path = input_dir / "input.zip"
     all_names_csv_path = ref_dir / "All Names.csv"
     ref_lists_json_path = input_dir / "reference_lists.json"
@@ -52,6 +39,7 @@ def generate_test_files_if_missing(input_dir: Path, ref_dir: Path):
     # Create directories if they don't exist
     input_dir.mkdir(parents=True, exist_ok=True)
     ref_dir.mkdir(parents=True, exist_ok=True)
+
 
     # --- Generate input.zip (with input.csv inside) ---
     if not input_zip_path.exists():
@@ -100,6 +88,7 @@ def generate_test_files_if_missing(input_dir: Path, ref_dir: Path):
             f.write(flagged_names_content)
 
 
+
 def main():
     """Main function to run the email analysis script."""
     parser = argparse.ArgumentParser(
@@ -125,6 +114,7 @@ def main():
         help=f"Directory for reference files like 'All Names.csv'.\nDefault: {DEFAULT_REF_DIR}"
     )
 
+
     args = parser.parse_args()
 
     setup_logging(args.output_dir)
@@ -135,20 +125,14 @@ def main():
     logging.info(f"Reference Directory: {args.ref_dir.resolve()}")
 
     try:
-        # The brief specifies reference files in two different default locations.
-        # We pass both relevant directories to the generation function.
-        # The primary reference file dir is `ref_dir`, secondary is `input_dir`.
-        generate_test_files_if_missing(args.input_dir, args.ref_dir)
 
-        # --- Placeholder for next steps ---
-        logging.info("Project scaffolding complete. Core logic will be implemented next.")
-        # This is where the main processing will be called.
 
     except Exception as e:
         logging.error(f"An unexpected error occurred: {e}", exc_info=True)
         sys.exit(1)
 
     logging.info("--- Script Finished Successfully ---")
+
 
 
 if __name__ == "__main__":
